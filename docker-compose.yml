@@ -1,0 +1,29 @@
+version: '3'
+services:
+  db:
+    container_name: interview_backend_postgres
+    image: "postgis/postgis"
+    environment:
+      POSTGRES_DB: bioma
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    ports:
+      - 5432:5432
+    networks:
+      - backend
+
+  app:
+    build:
+      context: .
+      dockerfile: "Dockerfile"
+    depends_on:
+      - db
+    networks:
+      - backend
+    environment:
+      WAIT_HOSTS: "db:5432"
+      ENV: "dev"
+      GO_ENV: "dev"
+
+networks:
+  backend:
