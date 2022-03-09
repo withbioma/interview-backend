@@ -197,7 +197,7 @@ func (c *ProductController) Update(w http.ResponseWriter, r *http.Request) {
 					return err
 				}
 
-				if err := c.BaseDAL.Remove(&product, nil); err != nil {
+				if err := c.BaseDAL.Remove(&productItem, nil); err != nil {
 					errs.APIError(r.Context(), w, http.StatusInternalServerError, err)
 					return err
 				}
