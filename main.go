@@ -43,7 +43,7 @@ func main() {
 			r.Post("/", productController.Create)
 			r.Route("/{product_id}", func(r chi.Router) {
 				r.Get("/", productController.Get)
-				r.Post("/", productController.Update)
+				r.Patch("/", productController.Update)
 				r.Delete("/", productController.Delete)
 			})
 		})

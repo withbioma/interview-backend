@@ -1,4 +1,5 @@
 # Bioma Interview Backend
+
 Bioma interview backend
 
 Installation:
@@ -27,11 +28,13 @@ make dev
 ### Relationship
 
 Products
+
 - has many Product Variant Groups, e.g. Size, Color, Wheels
 - has many Product Items, e.g. Small Blue Bike with 4 Wheels
   - has many Product Variants, e.g. Small, Blue, 4 Wheels
 
 Product Variant Groups, e.g. Size
+
 - has many Product Variants, e.g. Small
 
 ## APIs
@@ -129,6 +132,33 @@ Request:
          "weight_kg" : 1,
          "width_cm" : 10
          "product_variant_ids" : [1, 2, 3],
+      }
+   ],
+   "product_variant_group_ids" : [1]
+}
+```
+
+### Product update - PATCH localhost:8000/api/products/{product_id}
+
+Accept updating of products with variants.
+
+Request:
+
+```
+{
+   "name" : "New Bike",
+   "brand" : "New Olympic",
+   "description" : "New Road Bike",
+   "product_item" : [
+      {
+         "product_item_id" : 1,
+         "is_active" : false,
+         "retail_price" : 10000,
+         "height_cm" : 100,
+         "length_cm" : 100,
+         "weight_kg" : 2,
+         "width_cm" : 100
+         "product_variant_ids" : [1],
       }
    ],
    "product_variant_group_ids" : [1]
