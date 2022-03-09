@@ -185,8 +185,6 @@ func (c *ProductController) Update(w http.ResponseWriter, r *http.Request) {
 			return err
 		}
 
-		var productItems []models.ProductItem
-
 		for i := range req.ProductItems {
 			if req.ProductItems[i].ProductItemId != 0 {
 				var productItem models.ProductItem
@@ -206,6 +204,7 @@ func (c *ProductController) Update(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 
+		var productItems []models.ProductItem
 		for i := range req.ProductItems {
 			var productVariants []models.ProductVariant
 			if err := c.BaseDAL.Where(&productVariants, &dal.Configuration{
