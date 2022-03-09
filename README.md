@@ -22,7 +22,7 @@ make dev
 - Product: a product offering, such as Olympic Road Bike
 - Product Variant Group: a grouping that consists of multiple variants, such as Size and Color
 - Product Variant: a variant of the product, such as Small and Blue
-- Product Item: a combination of the variants forr the product, such as Olympic Road Bike Small Blue
+- Product Item: a combination of the variants for the product, such as Olympic Road Bike Small Blue
 
 ### Relationship
 
