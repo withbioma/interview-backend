@@ -186,6 +186,29 @@ func (c *ProductController) Update(w http.ResponseWriter, r *http.Request) {
 		}
 
 		var productItems []models.ProductItem
+
+		for i := range req.ProductItems {
+			var productItem models.ProductItem
+			if req.ProductItems[i].ProductItemId != 0 {
+				if err := c.BaseDAL.Get(
+					&productItem,
+					req.ProductItems[i].ProductItemId,
+					&dal.Configuration{
+						PreloadObjs: []string{
+							"ProductVariants",
+						},
+					}); err != nil {
+					errs.APIError(r.Context(), w, http.StatusInternalServerError, err)
+					return err
+				}
+
+				if err := c.BaseDAL.Remove(&product, nil); err != nil {
+					errs.APIError(r.Context(), w, http.StatusInternalServerError, err)
+					return err
+				}
+			}
+		}
+
 		for i := range req.ProductItems {
 			var productVariants []models.ProductVariant
 			if err := c.BaseDAL.Where(&productVariants, &dal.Configuration{
