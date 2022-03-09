@@ -178,17 +178,6 @@ func (c *ProductController) Update(w http.ResponseWriter, r *http.Request) {
 	product.Brand = req.Brand
 	product.Description = req.Description
 
-	var productVariantGroups []models.ProductVariantGroup
-	if err := c.BaseDAL.Where(&productVariantGroups, &dal.Configuration{
-		WhereClauses: []dal.WhereClause{{
-			Query: "id in ?",
-			Args:  []interface{}{req.ProductVariantGroupIDs},
-		}},
-	}); err != nil {
-		errs.APIError(r.Context(), w, http.StatusInternalServerError, err)
-		return
-	}
-
 	if err := dal.BeginTransaction(nil, func(tx *gorm.DB) error {
 		cfg := &dal.Configuration{Transaction: tx}
 
