@@ -1,5 +1,5 @@
-# Auth-Service
-Bioma's authentication service
+# Bioma Interview Backend
+Bioma interview backend
 
 Installation:
 
