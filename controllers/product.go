@@ -124,6 +124,121 @@ func (c *ProductController) Create(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(createResponse{Product: product})
 }
 
+func (c *ProductController) Update(w http.ResponseWriter, r *http.Request) {
+	type updateProductItemRequest struct {
+		ProductItemId     uint   `json:"product_item_id"`
+		RetailPrice       uint   `json:"retail_price"`
+		LengthCm          uint   `json:"length_cm"`
+		HeightCm          uint   `json:"height_cm"`
+		WidthCm           uint   `json:"width_cm"`
+		WeightKg          uint   `json:"weight_kg"`
+		IsActive          bool   `json:"is_active"`
+		ProductVariantIDs []uint `json:"product_variant_ids" validate:"gt=0,dive,required"`
+	}
+	type updateRequest struct {
+		Name                   string                     `json:"name"                      validate:"required"`
+		Brand                  string                     `json:"brand"                     validate:"required"`
+		Description            string                     `json:"description"               validate:"required"`
+		ProductVariantGroupIDs []uint                     `json:"product_variant_group_ids" validate:"gt=0,dive,required"`
+		ProductItems           []updateProductItemRequest `json:"product_items"             validate:"gt=0,dive,required"`
+	}
+
+	var req updateRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		errs.APIError(r.Context(), w, http.StatusBadRequest, err)
+		return
+	}
+	if err := validator.New().Struct(&req); err != nil {
+		errs.APIError(r.Context(), w, http.StatusBadRequest, err)
+		return
+	}
+
+	productIdRaw := chi.URLParam(r, "product_id")
+	productId, err := strings.ParseUint(productIdRaw)
+	if err != nil {
+		errs.APIError(r.Context(), w, http.StatusBadRequest, err)
+		return
+	}
+
+	var product models.Product
+	if err := c.BaseDAL.Get(
+		&product,
+		productId,
+		&dal.Configuration{
+			PreloadObjs: []string{
+				"ProductVariantGroups",
+				"ProductItems.ProductVariants",
+			},
+		}); err != nil {
+		errs.APIError(r.Context(), w, http.StatusInternalServerError, err)
+		return
+	}
+
+	product.Name = req.Name
+	product.Brand = req.Brand
+	product.Description = req.Description
+
+	var productVariantGroups []models.ProductVariantGroup
+	if err := c.BaseDAL.Where(&productVariantGroups, &dal.Configuration{
+		WhereClauses: []dal.WhereClause{{
+			Query: "id in ?",
+			Args:  []interface{}{req.ProductVariantGroupIDs},
+		}},
+	}); err != nil {
+		errs.APIError(r.Context(), w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := dal.BeginTransaction(nil, func(tx *gorm.DB) error {
+		cfg := &dal.Configuration{Transaction: tx}
+
+		if err := c.BaseDAL.Create(product, cfg); err != nil {
+			return err
+		}
+
+		var productItems []models.ProductItem
+		for i := range req.ProductItems {
+			var productVariants []models.ProductVariant
+			if err := c.BaseDAL.Where(&productVariants, &dal.Configuration{
+				Transaction: tx,
+				WhereClauses: []dal.WhereClause{{
+					Query: "id in ?",
+					Args:  []interface{}{req.ProductItems[i].ProductVariantIDs},
+				}},
+			}); err != nil {
+				return err
+			}
+
+			productItem := &models.ProductItem{
+				RetailPrice:     req.ProductItems[i].RetailPrice,
+				LengthCm:        req.ProductItems[i].LengthCm,
+				HeightCm:        req.ProductItems[i].HeightCm,
+				WidthCm:         req.ProductItems[i].WidthCm,
+				WeightKg:        req.ProductItems[i].WeightKg,
+				IsActive:        req.ProductItems[i].IsActive,
+				ProductVariants: productVariants,
+			}
+			if err := c.BaseDAL.Create(productItem, cfg); err != nil {
+				return err
+			}
+
+			productItems = append(productItems, *productItem)
+		}
+
+		product.ProductItems = productItems
+		return nil
+	}); err != nil {
+		errs.APIError(r.Context(), w, http.StatusInternalServerError, err)
+		return
+	}
+
+	w.WriteHeader(http.StatusCreated)
+	type updateResponse struct {
+		Product *models.Product `json:"product"`
+	}
+	json.NewEncoder(w).Encode(updateResponse{Product: &product})
+}
+
 func (c *ProductController) GetAll(w http.ResponseWriter, r *http.Request) {
 	var products []models.Product
 	if err := c.BaseDAL.Where(
