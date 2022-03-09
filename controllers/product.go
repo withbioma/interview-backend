@@ -188,8 +188,8 @@ func (c *ProductController) Update(w http.ResponseWriter, r *http.Request) {
 		var productItems []models.ProductItem
 
 		for i := range req.ProductItems {
-			var productItem models.ProductItem
 			if req.ProductItems[i].ProductItemId != 0 {
+				var productItem models.ProductItem
 				if err := c.BaseDAL.Get(
 					&productItem,
 					req.ProductItems[i].ProductItemId,
