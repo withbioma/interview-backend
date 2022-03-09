@@ -30,4 +30,4 @@ RUN chmod +x /wait
 # Expose port 8000
 EXPOSE 8000
 
-CMD /wait && ./main
+CMD /wait && echo "Waiting for 5 seconds..." && sleep 5 && ./main

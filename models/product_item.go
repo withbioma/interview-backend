@@ -15,9 +15,9 @@ type ProductItem struct {
 	WeightKg    uint `                  json:"weight_kg"`
 	IsActive    bool `                  json:"is_active"`
 
-	ProductID       *uint            `json:"product_id"`
-	Product         *Product         `json:"product"`
-	ProductVariants []ProductVariant `json:"product_variants" gorm:"many2many:product_item_product_variants;"`
+	ProductID       *uint            `json:"product_id,omitempty"`
+	Product         *Product         `json:"product,omitempty"`
+	ProductVariants []ProductVariant `json:"product_variants,omitempty" gorm:"many2many:product_item_product_variants;"`
 
 	CreatedAt time.Time      `json:"created_at"`
 	UpdatedAt time.Time      `json:"updated_at"`

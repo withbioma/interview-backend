@@ -67,7 +67,7 @@ func (c *ProductVariantGroupController) Create(w http.ResponseWriter, r *http.Re
 		return
 	}
 
-	w.WriteHeader(http.StatusOK)
+	w.WriteHeader(http.StatusCreated)
 	type createResponse struct {
 		ProductVariantGroup *models.ProductVariantGroup `json:"product_variant_group"`
 	}
@@ -75,7 +75,7 @@ func (c *ProductVariantGroupController) Create(w http.ResponseWriter, r *http.Re
 }
 
 func (c *ProductVariantGroupController) GetAll(w http.ResponseWriter, r *http.Request) {
-	var productVariantGroups []models.Product
+	var productVariantGroups []models.ProductVariantGroup
 	if err := c.BaseDAL.Where(
 		&productVariantGroups,
 		&dal.Configuration{
@@ -87,7 +87,7 @@ func (c *ProductVariantGroupController) GetAll(w http.ResponseWriter, r *http.Re
 
 	w.WriteHeader(http.StatusOK)
 	type getAllResponse struct {
-		ProductVariantGroups []models.Product `json:"productVariantGroups"`
+		ProductVariantGroups []models.ProductVariantGroup `json:"product_variant_groups"`
 	}
 	json.NewEncoder(w).Encode(getAllResponse{ProductVariantGroups: productVariantGroups})
 }
@@ -120,7 +120,7 @@ func (c *ProductVariantGroupController) Delete(w http.ResponseWriter, r *http.Re
 
 	w.WriteHeader(http.StatusOK)
 	type deleteResponse struct {
-		ProductVariantGroup *models.ProductVariantGroup `json:"productVariantGroup"`
+		ProductVariantGroup *models.ProductVariantGroup `json:"product_variant_group"`
 	}
 	json.NewEncoder(w).Encode(deleteResponse{ProductVariantGroup: &productVariantGroup})
 }

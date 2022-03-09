@@ -12,8 +12,8 @@ type Product struct {
 	Brand       string `                  json:"brand"`
 	Description string `                  json:"description"`
 
-	ProductVariantGroups []ProductVariantGroup `json:"product_variant_groups" gorm:"many2many:product_product_variant_groups;"`
-	ProductItems         []ProductItem         `json:"product_item"`
+	ProductVariantGroups []ProductVariantGroup `json:"product_variant_groups,omitempty" gorm:"many2many:product_product_variant_groups;"`
+	ProductItems         []ProductItem         `json:"product_item,omitempty"`
 
 	CreatedAt time.Time      `json:"created_at"`
 	UpdatedAt time.Time      `json:"updated_at"`

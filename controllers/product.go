@@ -117,7 +117,7 @@ func (c *ProductController) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.WriteHeader(http.StatusOK)
+	w.WriteHeader(http.StatusCreated)
 	type createResponse struct {
 		Product *models.Product `json:"product"`
 	}

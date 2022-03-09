@@ -24,6 +24,8 @@ services:
       WAIT_HOSTS: "db:5432"
       ENV: "dev"
       GO_ENV: "dev"
+    ports:
+      - 8000:8000
 
 networks:
   backend:
