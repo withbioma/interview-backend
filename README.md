@@ -15,6 +15,25 @@ make dev
 # Server is now available on port 8000
 ```
 
+## Schema
+
+### Definition
+
+- Product: a product offering, such as Olympic Road Bike
+- Product Variant Group: a grouping that consists of multiple variants, such as Size and Color
+- Product Variant: a variant of the product, such as Small and Blue
+- Product Item: a combination of the variants forr the product, such as Olympic Road Bike Small Blue
+
+### Relationship
+
+Products
+- has many Product Variant Groups, e.g. Size, Color, Wheels
+- has many Product Items, e.g. Small Blue Bike with 4 Wheels
+  - has many Product Variants, e.g. Small, Blue, 4 Wheels
+
+Product Variant Groups, e.g. Size
+- has many Product Variants, e.g. Small
+
 ## APIs
 
 ### Products list - GET localhost:8000/api/products
