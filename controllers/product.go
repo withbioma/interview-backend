@@ -192,7 +192,7 @@ func (c *ProductController) Update(w http.ResponseWriter, r *http.Request) {
 	if err := dal.BeginTransaction(nil, func(tx *gorm.DB) error {
 		cfg := &dal.Configuration{Transaction: tx}
 
-		if err := c.BaseDAL.Create(product, cfg); err != nil {
+		if err := c.BaseDAL.Update(product, cfg); err != nil {
 			return err
 		}
 
