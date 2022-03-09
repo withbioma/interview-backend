@@ -193,11 +193,8 @@ func (c *ProductController) Update(w http.ResponseWriter, r *http.Request) {
 				if err := c.BaseDAL.Get(
 					&productItem,
 					req.ProductItems[i].ProductItemId,
-					&dal.Configuration{
-						PreloadObjs: []string{
-							"ProductVariants",
-						},
-					}); err != nil {
+					&dal.Configuration{},
+				); err != nil {
 					errs.APIError(r.Context(), w, http.StatusInternalServerError, err)
 					return err
 				}
