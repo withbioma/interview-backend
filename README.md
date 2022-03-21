@@ -2,12 +2,6 @@
 
 Bioma interview backend
 
-Installation:
-
-```
-make install
-```
-
 Running the server:
 
 ```
