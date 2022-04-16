@@ -151,8 +151,8 @@ Request:
          "height_cm" : 100,
          "length_cm" : 100,
          "weight_kg" : 2,
-         "width_cm" : 100
-         "product_variant_ids" : [1],
+         "width_cm" : 100,
+         "product_variant_ids" : [1]
       }
    ],
    "product_variant_group_ids" : [1]
